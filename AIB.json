@@ -1,0 +1,43 @@
+{
+    "type": "Microsoft.VirtualMachineImages/imageTemplates",
+    "apiVersion": "2019-05-01-preview",
+    "location": "West Europe",
+    "tags":{
+        "templateVersion" : "<imgTemplateName>"
+    },
+    "dependsOn": [],
+    "properties": {
+        "source": { 
+            "type": "ManagedImage", 
+                "imageId": "/subscriptions/c1bd9039-9169-41b6-9b75-6eef04aaf8a4/resourceGroups/CentralizedLabAccount-RG/providers/Microsoft.Compute/images/10-VM-image-iaas-tomcat-app-West-US-image"
+        },
+        "customize": [
+            {
+                "type": "Shell",
+                "name": "InstallUpgrades",
+                "inline": [
+                    "sudo apt install unattended-upgrades"
+                ]
+            }
+
+        ],
+        "distribute": 
+            [
+                { 
+                    "type": "VHD",
+                    "runOutputName": "OutVHD",
+                    "tags": {
+                        "source": "azVmImageBuilder"
+                    }
+                },
+                {   "type":"ManagedImage",
+                    "imageId": "/subscriptions/c1bd9039-9169-41b6-9b75-6eef04aaf8a4/resourceGroups/CentralizedLabAccount-RG/providers/Microsoft.Compute/images/10-VM-image-iaas-tomcat-app-West-US-image-AIB-Patched",
+                    "location": "West Europe",
+                    "runOutputName": "OutmanagedImage",
+                    "artifactTags": {
+                        "source": "azVmImageBuilder"
+                    }
+                }
+            ]
+        }
+    }
